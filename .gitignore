@@ -1,0 +1,37 @@
+node_modules/
+.next/
+*.log
+.DS_Store
+backend/data/
+backend/uploads/
+backend/target/
+frontend/.env.local
+*.mv.db
+*.trace.db
+.env
+
+# Environment secrets
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Credentials
+secrets/
+credentials/
+service-account*.json
+
+# Local databases
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/

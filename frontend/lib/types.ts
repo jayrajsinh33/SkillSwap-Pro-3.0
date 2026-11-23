@@ -1,0 +1,11 @@
+export type User={id:number;name:string;email:string;headline:string;bio:string;city:string;avatar:string;skills:string;mentor:boolean;mentorRequested:boolean;mentorDocumentSubmitted?:boolean;mentorDocumentVerified?:boolean;mentorBankSubmitted?:boolean;mentorBankVerified?:boolean;mentorBankLast4?:string;mentorAgreementSigned?:boolean;freeLectureUsed?:boolean;hourlyRatePaise?:number;performanceScore?:number;violationCount?:number;assessedPenaltyPaise?:number;permanentlyBanned?:boolean;admin:boolean;active:boolean;balancePaise:number;lifetimeEarningsPaise:number};
+export type Course={id:number;title:string;description:string;category:string;cover:string;level:string;tags:string;lessons:number;durationMinutes:number;pricePaise:number;published:boolean;rating:number;mentor:User};
+export type Enrollment={id:number;course:Course;progress:number;enrolledAt:string};
+export type Booking={id:number;status:'PENDING'|'CONFIRMED'|'COMPLETED'|'CANCELLED';startAt:string;durationMinutes:number;lectureId?:string;paidPaise?:number;freeTrial?:boolean;refunded?:boolean;bundleId?:string;course:Course;learner:User;mentor:User};
+export type Quote={basePaise:number;courseTaxPaise:number;totalPaise:number;commissionPaise:number;commissionTaxPaise:number;mentorNetPaise:number};
+export type Transaction={id:number;changePaise:number;balanceAfterPaise:number;type:string;description:string;createdAt:string};
+export type Chat={id:number;title:string;type:string;courseId:number;members:User[]};
+export type Message={id:number;sender:User;body:string;attachmentId:number;createdAt:string};
+export const money=(paise:number)=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format((paise||0)/100);
+export const when=(iso:string)=>new Date(iso).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+export const photo=(url?:string)=>url&&url.startsWith('https://')?url:'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80';

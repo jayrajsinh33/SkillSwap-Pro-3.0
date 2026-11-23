@@ -1,0 +1,16 @@
+'use client';
+import {useEffect,useState} from 'react';
+import Link from 'next/link';
+import {BookOpen,Video,MessagesSquare,ArrowRight} from 'lucide-react';
+import Shell from '@/components/Shell';
+import Empty from '@/components/Empty';
+import {api} from '@/lib/api';
+import {Enrollment,photo} from '@/lib/types';
+import {useAuth} from '@/lib/auth';
+export default function MyLearning(){const {user}=useAuth();const [rows,setRows]=useState<Enrollment[]>([]),[loading,setLoading]=useState(true),[error,setError]=useState('');
+ useEffect(()=>{if(!user?.id)return;setLoading(true);api<Enrollment[]>('/enrollments').then(x=>{setRows(x);setError('')}).catch(e=>setError(e.message)).finally(()=>setLoading(false))},[user?.id]);
+ return <Shell title="My learning"><div className="eyebrow">YOUR PERSONAL COURSE LIBRARY</div><h1 className="page-title">Continue learning.</h1><p className="page-subtitle">Find your purchased courses here. Tap Open lessons to watch available recorded videos and download notes.</p>
+ {error&&<div role="alert" className="error">{error} <button className="btn btn-outline btn-sm" onClick={()=>window.location.reload()}>Try again</button></div>}
+ {loading?<div className="panel">Loading your enrolled courses…</div>:!rows.length?<Empty title="Your learning library is empty" description="Explore courses, add demo funds to your wallet and enroll to unlock classes and resources."/>:<><div className="stats-grid" style={{marginBottom:16}}><div className="stat"><label>Enrolled courses</label><strong>{rows.length}</strong></div><div className="stat"><label>Completed courses</label><strong>{rows.filter(x=>x.progress>=100).length}</strong></div><div className="stat"><label>Lessons in progress</label><strong>{rows.filter(x=>x.progress>0&&x.progress<100).length}</strong></div></div><div className="grid-2">{rows.map(x=><div className="panel learning-card" key={x.id}><img style={{height:155,objectFit:"cover"}} src={photo(x.course.cover)} alt={x.course.title}/><div><span className="chip">{x.course.category}</span><h3 style={{margin:'12px 0 6px'}}>{x.course.title}</h3><p className="muted" style={{marginTop:0}}>Mentor: {x.course.mentor.name} · {x.course.lessons} lessons</p><div className="progress-track"><span style={{width:`${x.progress}%`}}/></div><p className="muted" style={{margin:'8px 0 15px'}}>{x.progress}% completed · progress saved to database</p><div className="study-actions"><Link href={`/learning/${x.course.id}`} className="btn btn-primary"><BookOpen size={17}/> Open lessons <ArrowRight size={16}/></Link><Link href="/classes" className="btn btn-outline"><Video size={17}/> Book class</Link></div></div></div>)}</div></>}
+ <div className="panel" style={{marginTop:24}}><h3>Make the most of SkillSwap</h3><div className="grid-2"><div className="badge-inline"><MessagesSquare size={21}/> Chat with mentors and share PDF notes in Messages.</div><div className="badge-inline"><Video size={21}/> Attend one-to-one and group video classes.</div></div><div className="study-actions" style={{marginTop:17}}><Link className="btn btn-outline" href="/courses">Explore more courses</Link><Link className="btn btn-outline" href="/messages">Open messages</Link></div></div></Shell>;
+}
